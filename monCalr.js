@@ -38,8 +38,8 @@ function rmStr(rLang) {
 	var js=rg2j(gy,gm,gd); //convert english date to Julian Day Number
 	var M=rj2m(js);//calculate Myanmar date
 	
-	var str=grX['Sasana Year']+" "+rn2s(M.my+1182)+""+grX['Ku']+grX[',']+" ";
-	str+=grX["Myanmar Year"]+" "+rn2s(M.my)+""+grX['Ku']+grX[',']+" ";
+	var str=grX['Sasana Year']+" "+rn2s(M.my+1182)+" "+grX['Ku']+grX[',']+" ";
+	str+=grX["Myanmar Year"]+" "+rn2s(M.my)+" "+grX['Ku']+grX[',']+" ";
 	
 	var mma=["First Waso","Tagu","Kason","Nayon","Waso","Wagaung","Tawthalin",
 			 "Thadingyut","Tazaungmon","Nadaw","Pyatho","Tabodwe","Tabaung"];
