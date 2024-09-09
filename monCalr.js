@@ -38,8 +38,8 @@ function rmStr(rLang) {
 	var js=rg2j(gy,gm,gd); //convert english date to Julian Day Number
 	var M=rj2m(js);//calculate Myanmar date
 	
-	var str=grX['Sasana Year']+" "+rn2s(M.my+1182)+" "+grX['Ku']+grX[',']+" ";
-	str+=grX["Myanmar Year"]+" "+rn2s(M.my)+" "+grX['Ku']+grX[',']+" ";
+	var str=grX['Sasana Year']+" "+rn2s(M.my+1182)+""+grX['Ku']+grX[',']+" ";
+	str+=grX["Myanmar Year"]+" "+rn2s(M.my)+""+grX['Ku']+grX[',']+" ";
 	
 	var mma=["First Waso","Tagu","Kason","Nayon","Waso","Wagaung","Tawthalin",
 			 "Thadingyut","Tazaungmon","Nadaw","Pyatho","Tabodwe","Tabaung"];
@@ -53,7 +53,7 @@ function rmStr(rLang) {
 		str+=grX[msa[M.ms]];
 	} //if Unicode Mon language, use different order
 	else if (rLang==4) {
-		if((M.ms%2)==0) str+=" "+rn2s(M.d)+" ";
+		if((M.ms%2)==0) str+=" "+rn2s(M.d);
 		str+=grX[msa[M.ms]];
 	} //if UniMon Mon language, use different order
 	else if (rLang==5) {
