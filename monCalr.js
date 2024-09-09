@@ -49,7 +49,7 @@ function rmStr(rLang) {
 	
 	var msa=["waxing","full moon","waning","new moon"];
 	if (rLang==2) {
-		if((M.ms%2)==0) str+=" "+rn2s(M.d)+" ";
+		if((M.ms%2)==0) str+=" "+rn2s(M.d);
 		str+=grX[msa[M.ms]];
 	} //if Unicode Mon language, use different order
 	else if (rLang==4) {
