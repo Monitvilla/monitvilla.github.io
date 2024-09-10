@@ -1,4 +1,4 @@
-﻿//Author: Yan Naing Aye
+//Author: Yan Naing Aye
 //http://mmcal.blogspot.com
 //Version: 201508311115 (only for ME 1312 and later)
 //#############################################################################
@@ -200,7 +200,7 @@ function rSetLang(lang) //Internationalization---------------------------------
 	'Tabaung':'ဂိတုဖဝ်ရဂိုန်','waxing':'မံက်','waning':'စွေက်','full moon':'ပေၚ်',
 	'new moon':'အိုတ်','Sasana Year':'သာသနာ -','Myanmar Year':'သက္ကရာဇ်ဍုၚ် -',
 	'Ku':'သၞာံ','Late':'','Second':'ဒု','Sunday':'တ္ၚဲအဒိုတ်','Monday':'တ္ၚဲစန်',
-	'Tuesday':'တ္ၚဲအင္ၚာ','Wednesday':'တ္ၚဲဗုဒ္ဓဝါ','Thursday':'တ္ၚဲဗြဴဗတိ','Friday':'တ္ၚဲသိုက်',
+	'Tuesday':'တ္ၚဲအၚာ','Wednesday':'တ္ၚဲဗုဒ္ဓဝါ','Thursday':'တ္ၚဲဗြဴဗတိ','Friday':'တ္ၚဲသိုက်',
 	'Saturday':'တ္ၚဲသ္ၚိသဝ်','Nay':'','Yat':'','Sabbath Eve':'တ္ၚဲတိၚ်','Sabbath':'တ္ၚဲသဳ',
 	'0': '၀','1': '၁','2': '၂','3': '၃','4': '၄','5': '၅','6': '၆','7': '၇',
 	'8': '၈','9': '၉',',':'၊','.':''};}
