@@ -9,10 +9,10 @@ document.addEventListener("DOMContentLoaded", function(){rmDisp();});
 function rmDisp() {
 	var ormcal,rmcalLang,rLang;
 	do{
-		ormcal=document.getElementById('mcalr');
+		ormcal=document.getElementById('moncalr');
 		//get the element to output display
 		if (ormcal===null) break;
-		ormcal.id="mcalr"+(mc_no++).toString();
+		ormcal.id="moncalr"+(mc_no++).toString();
 		rmcalLang=ormcal.lang; //get the language to display
 		//---------------------------------------------------------------------
 		rLang=0;  //language number - default is 0 (Myanmar unicode)
