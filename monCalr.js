@@ -1,4 +1,4 @@
-//Author: Yan Naing Aye
+﻿//Author: Yan Naing Aye
 //http://mmcal.blogspot.com
 //Version: 201508311115 (only for ME 1312 and later)
 //#############################################################################
@@ -9,10 +9,10 @@ document.addEventListener("DOMContentLoaded", function(){rmDisp();});
 function rmDisp() {
 	var ormcal,rmcalLang,rLang;
 	do{
-		ormcal=document.getElementById('moncalr');
+		ormcal=document.getElementById('mcalr');
 		//get the element to output display
 		if (ormcal===null) break;
-		ormcal.id="moncalr"+(mc_no++).toString();
+		ormcal.id="mcalr"+(mc_no++).toString();
 		rmcalLang=ormcal.lang; //get the language to display
 		//---------------------------------------------------------------------
 		rLang=0;  //language number - default is 0 (Myanmar unicode)
@@ -38,26 +38,41 @@ function rmStr(rLang) {
 	var js=rg2j(gy,gm,gd); //convert english date to Julian Day Number
 	var M=rj2m(js);//calculate Myanmar date
 	
-	var str=grX['Sasana Year']+" "+rn2s(M.my+1182)+" "+grX['Ku']+grX[',']+" ";
-	str+=grX["Myanmar Year"]+" "+rn2s(M.my)+" "+grX['Ku']+grX[',']+" ";
+var isAfterApril16 = (gm > 4) || (gm === 4 && gd >= 17);
+var isBeforeKasonFM = (M.mm === 1) || (M.mm === 2 && M.ms === 0) || (M.mm >= 11);
+var sOffset = (isAfterApril16 && isBeforeKasonFM) ? 1181 : 1182;
+var str = grX['Sasana Year'] + " " + rn2s(M.my + sOffset) + " " + grX['Ku'] + grX[','] + " ";
+	  str+=grX["Myanmar Year"]+" "+rn2s(M.my)+" "+grX['Ku']+grX[',']+" ";
 	
 	var mma=["First Waso","Tagu","Kason","Nayon","Waso","Wagaung","Tawthalin",
 			 "Thadingyut","Tazaungmon","Nadaw","Pyatho","Tabodwe","Tabaung"];
-	if(M.mmt) str+=grX['Late']; // if Hnaung Tagu or Hnaung Kason
-	if(M.myt && M.mm==4) str+=grX['Second']; //if second Waso
-	str+=grX[mma[M.mm]]+" ";  //Myanmar month
+		
+// --- OLD CODE ---
+// if(M.mmt) str+=grX['Late']; 
+// if(M.myt && M.mm==4) str+=grX['Second']; 
+// str+=grX[mma[M.mm]]+" ";
+
+if (M.mmt) {
+    str += grX['Late']; // For Hnaung Tagu / Hnaung Kason
+}
+
+if (M.myt && M.mm == 4) {
+    str += grX['Second Waso'] + " "; 
+} else {
+    str += grX[mma[M.mm]] + " "; 
+}
 	
 	var msa=["waxing","full moon","waning","new moon"];
 	if (rLang==2) {
-		if((M.ms%2)==0) str+=""+rn2s(M.d)+" ";
+		if((M.ms%2)==0) str+=" ( "+rn2s(M.d)+" ) ";
 		str+=grX[msa[M.ms]];
 	} //if Unicode Mon language, use different order
 	else if (rLang==4) {
-		if((M.ms%2)==0) str+=""+rn2s(M.d)+" ";
+		if((M.ms%2)==0) str+=" "+rn2s(M.d)+" ";
 		str+=grX[msa[M.ms]];
 	} //if UniMon Mon language, use different order
 	else if (rLang==5) {
-		if((M.ms%2)==0) str+=""+rn2s(M.d)+" ";
+		if((M.ms%2)==0) str+=" "+rn2s(M.d)+" ";
 		str+=grX[msa[M.ms]];
 	} //if Mon Mon language, use different order
 	else{
@@ -193,13 +208,12 @@ function rSetLang(lang) //Internationalization---------------------------------
 
 	else if (lang==2) { //Catalog for Mon Language  using Unicode,
 	//Mon Language Translation by: 'ITVilla' : http://it-villa.blogspot.com/,
-	//Proof reading: Mikau Nyan
-	return {'First Waso':'ဂိတုပ-ဒ္ဂိုန်','Tagu':'ဂိတုစဲ','Kason':'ဂိတုပသာ်','Nayon':'ဂိတုဇှေ်',
+	return {'Second Waso': 'ဂိတုဒု-ဒ္ဂိုန်','First Waso':'ဂိတုပ-ဒ္ဂိုန်','Tagu':'ဂိတုစဲ','Kason':'ဂိတုပသာ်','Nayon':'ဂိတုဇှ်ေ',
 	'Waso':'ဂိတုဒ္ဂိုန်','Wagaung':'ဂိတုခ္ဍဲသဳ','Tawthalin':'ဂိတုဘတ်','Thadingyut':'ဂိတုဝှ်',
 	'Tazaungmon':'ဂိတုက္ထိုန်','Nadaw':'ဂိတုမြေက္ကသဵု','Pyatho':'ဂိတုပုဟ်','Tabodwe':'ဂိတုမာ်',
 	'Tabaung':'ဂိတုဖဝ်ရဂိုန်','waxing':'မံက်','waning':'စွေက်','full moon':'ပေၚ်',
 	'new moon':'အိုတ်','Sasana Year':'သာသနာ -','Myanmar Year':'သက္ကရာဇ်ဍုၚ် -',
-	'Ku':'သၞာံ','Late':'','Second':'ဒု','Sunday':'တ္ၚဲအဒိုတ်','Monday':'တ္ၚဲစန်',
+	'Ku':'သၞာံ','Late':'','Second':'','Sunday':'တ္ၚဲအဒိုတ်','Monday':'တ္ၚဲစန်',
 	'Tuesday':'တ္ၚဲအၚာ','Wednesday':'တ္ၚဲဗုဒ္ဓဝါ','Thursday':'တ္ၚဲဗြဴဗတိ','Friday':'တ္ၚဲသိုက်',
 	'Saturday':'တ္ၚဲသ္ၚိသဝ်','Nay':'','Yat':'','Sabbath Eve':'တ္ၚဲတိၚ်','Sabbath':'တ္ၚဲသဳ',
 	'0': '၀','1': '၁','2': '၂','3': '၃','4': '၄','5': '၅','6': '၆','7': '၇',
