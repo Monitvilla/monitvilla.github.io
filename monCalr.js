@@ -1,4 +1,4 @@
-﻿//Author: Yan Naing Aye
+//Author: Yan Naing Aye
 //http://mmcal.blogspot.com
 //Version: 201508311115 (only for ME 1312 and later)
 //#############################################################################
@@ -64,7 +64,7 @@ if (M.myt && M.mm == 4) {
 	
 	var msa=["waxing","full moon","waning","new moon"];
 	if (rLang==2) {
-		if((M.ms%2)==0) str+=" "+rn2s(M.d)+" ";
+		if((M.ms%2)==0) str+=""+rn2s(M.d)+" ";
 		str+=grX[msa[M.ms]];
 	} //if Unicode Mon language, use different order
 	else if (rLang==4) {
