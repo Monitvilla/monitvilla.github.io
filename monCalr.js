@@ -37,10 +37,15 @@ function rmStr(rLang) {
 	var gd=dt.getDate(); //get current date -year, month, day
 	var js=rg2j(gy,gm,gd); //convert english date to Julian Day Number
 	var M=rj2m(js);//calculate Myanmar date
-	
-var isAfterApril16 = (gm > 4) || (gm === 4 && gd >= 17);
-var isBeforeKasonFM = (M.mm === 1) || (M.mm === 2 && M.ms === 0) || (M.mm >= 11);
-var sOffset = (isAfterApril16 && isBeforeKasonFM) ? 1181 : 1182;
+	var hours = dt.getHours();
+	var minutes = dt.getMinutes();
+	var isBeforeDawn = (hours < 4) || (hours === 4 && minutes < 50);
+	var isAfterApril16 = (gm > 4) || (gm === 4 && gd >= 17);
+	var isKasonWaning1 = (M.mm === 2 && M.ms === 2 && M.d === 1);
+	var isBeforeKasonWaning1Dawn = (M.mm === 1) || 
+                               (M.mm === 2 && (M.ms === 0 || M.ms === 1)) || 
+                               (isKasonWaning1 && isBeforeDawn);
+	var sOffset = (isAfterApril16 && isBeforeKasonWaning1Dawn) ? 1181 : 1182;	
 var str = grX['Sasana Year'] + " " + rn2s(M.my + sOffset) + " " + grX['Ku'] + grX[','] + " ";
 	  str+=grX["Myanmar Year"]+" "+rn2s(M.my)+" "+grX['Ku']+grX[',']+" ";
 	
