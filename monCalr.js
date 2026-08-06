@@ -24,7 +24,7 @@ function rmDisp() {
 				 rmcalLang=="my-z1") rLang=3; // Zawgyi font
 		grX=rSetLang(rLang);  //Initialize the selected language catalog
 		//--------------------------------------------------------------------
-		ormcal.style.textDecoration="none"; ormcal.href="http://mc1500.com";
+		ormcal.style.textDecoration="none"; ormcal.href="https://monitvilla.github.io/monCalr.htm";
 		ormcal.target="_blank"; // decorate the display element
 		if(rLang==3) ormcal.style.fontFamily="Zawgyi-One";
 		ormcal.innerHTML=rmStr(rLang); //get Myanmar date string to display
