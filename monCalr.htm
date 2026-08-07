@@ -20,18 +20,19 @@
         }
 
         body {
-            background-color: #dcdcdc; /* Smooth gray background */
+            background-color: #dcdcdc;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+			min-height: 100dvh;
             font-family: '02Mon(Omar Ray Cham)office', 'Pyidaungsu', sans-serif;
         }
 
         .calendar-widget {
             width: 130px;
             height: 165px;
-			margin-top: -35px;
+			transform: translateY(-35px);
             background: url('bg.png') no-repeat 0 0;
             background-size: 130px 165px;
             padding-top: 41px; 
