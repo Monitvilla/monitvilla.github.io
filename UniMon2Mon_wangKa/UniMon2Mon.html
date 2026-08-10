@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon & UniMon Converter</title>
+    <style>
+        @font-face {
+            font-family: 'Uni Mon';
+            src: url('unimon.ttf') format('truetype');
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Mon';
+            src: url('mon.ttf') format('truetype');
+            font-display: swap;
+        }
+
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #059669;
+            --primary-hover: #047857;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --focus-ring: rgba(5, 150, 105, 0.2);
+            --font-unimon: 'Uni Mon', sans-serif;
+            --font-mon: 'Mon', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background-color: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 8px;
+            max-width: 380px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mode-btn.active {
+            background-color: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .converter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .converter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        textarea {
+            width: 100%;
+            height: 220px;
+            padding: 0.875rem;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: var(--text-main);
+            background-color: #fafafa;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+
+        .font-unimon {
+            font-family: var(--font-unimon);
+        }
+
+        .font-mon {
+            font-family: var(--font-mon);
+        }
+
+        textarea:focus {
+            background-color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        .actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        button.action-btn {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 2.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button.action-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button.action-btn:active {
+            transform: scale(0.98);
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 id="appTitle">UniMon ⇄ Mon Converter</h1>
+        <p>Type or paste text below for automatic real-time conversion</p>
+    </header>
+
+    <div class="mode-selector">
+        <button type="button" class="mode-btn active" id="btnUniToMon" onclick="setMode('uni2mon')">UniMon → Mon</button>
+        <button type="button" class="mode-btn" id="btnMonToUni" onclick="setMode('mon2uni')">Mon → UniMon</button>
+    </div>
+
+    <div class="converter-grid">
+        <div class="input-group">
+            <label for="txtInput" id="lblInput">UniMon Input:</label>
+            <textarea id="txtInput" class="font-unimon" placeholder="Type or paste words here..."></textarea>
+        </div>
+
+        <div class="input-group">
+            <label for="txtResult" id="lblResult">Mon Output:</label>
+            <textarea id="txtResult" class="font-mon" readonly placeholder="Converted text will appear here..."></textarea>
+        </div>
+
+        <div class="actions">
+            <button type="button" class="action-btn" id="copyBtn" onclick="copyResult()">Copy Output</button>
+        </div>
+    </div>
+
+    <footer>
+        Created by JaMonRott<br><a href="https://it-villa.blogspot.com" target="_blank" style="text-decoration: none; color: gray; font-size: 12px">https://it-villa.blogspot.com</a><br><br>
+		<a href="https://info.flagcounter.com/lkp9" target="_blank"><img src="https://s01.flagcounter.com/mini/lkp9/bg_FFFFFF/txt_000000/border_CCCCCC/flags_0/" alt="Flag Counter" border="0"></a>
+    </footer>
+</div>
+
+<script>
+    let currentMode = 'uni2mon';
+
+    // UniMon -> Mon mappings
+    const uniToMonMap = {
+        4177: 4250, 4190: 4159, 4134: 4249, 4253: 4158, 4179: 4191,
+        4158: 4248, 4252: 4188, 4138: 4253, 4189: 4187, 4243: 4176,
+        4178: 4189, 4188: 4149, 4250: 4136, 4255: 4190, 4251: 4252,
+        4187: 4251, 4191: 4130, 4176: 4191
+    };
+
+    const uniToMonComplex = {
+        4159: { code: 4252, append: [4117, 4146] },
+        4130: { code: 4154, append: [4103, 4231] },
+        4149: { code: 4139, append: [4146] },
+        4136: { code: 4140, append: [4145, 4096, 4150, 4143] },
+        4254: { code: 4187, append: [4100] }
+    };
+
+    // Mon -> UniMon mappings
+    const monToUniMap = {
+        4250: 4177, 4159: 4190, 4249: 4134, 4158: 4253, 4248: 4158,
+        4188: 4252, 4253: 4138, 4187: 4189, 4176: 4243, 4189: 4178,
+        4149: 4188, 4136: 4250, 4190: 4255, 4252: 4251, 4251: 4187,
+        4130: 4191, 4191: 4176
+    };
+
+    function convertText() {
+        const inputStr = document.getElementById("txtInput").value;
+        let result = "";
+
+        if (currentMode === 'uni2mon') {
+            for (let i = 0; i < inputStr.length; i++) {
+                let keycode = inputStr.charCodeAt(i);
+                if (uniToMonComplex[keycode]) {
+                    const map = uniToMonComplex[keycode];
+                    result += String.fromCharCode(map.code);
+                    map.append.forEach(code => {
+                        result += String.fromCharCode(code);
+                    });
+                } else {
+                    if (uniToMonMap[keycode]) {
+                        keycode = uniToMonMap[keycode];
+                    }
+                    result += String.fromCharCode(keycode);
+                }
+            }
+        } else {
+            for (let i = 0; i < inputStr.length; i++) {
+                let keycode = inputStr.charCodeAt(i);
+                if (monToUniMap[keycode]) {
+                    keycode = monToUniMap[keycode];
+                }
+                result += String.fromCharCode(keycode);
+            }
+        }
+
+        document.getElementById("txtResult").value = result;
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        const txtInput = document.getElementById("txtInput");
+        const txtResult = document.getElementById("txtResult");
+        const lblInput = document.getElementById("lblInput");
+        const lblResult = document.getElementById("lblResult");
+        const btnUniToMon = document.getElementById("btnUniToMon");
+        const btnMonToUni = document.getElementById("btnMonToUni");
+
+        if (mode === 'uni2mon') {
+            btnUniToMon.classList.add("active");
+            btnMonToUni.classList.remove("active");
+            lblInput.innerText = "UniMon Input:";
+            lblResult.innerText = "Mon Output:";
+            txtInput.className = "font-unimon";
+            txtResult.className = "font-mon";
+        } else {
+            btnMonToUni.classList.add("active");
+            btnUniToMon.classList.remove("active");
+            lblInput.innerText = "Mon Input:";
+            lblResult.innerText = "UniMon Output:";
+            txtInput.className = "font-mon";
+            txtResult.className = "font-unimon";
+        }
+
+        convertText();
+    }
+
+    document.getElementById("txtInput").addEventListener("input", convertText);
+
+    function copyResult() {
+        const outputText = document.getElementById("txtResult").value;
+        if (!outputText) return;
+
+        navigator.clipboard.writeText(outputText).then(function() {
+            const btn = document.getElementById("copyBtn");
+            btn.innerText = "Copied!";
+            setTimeout(function() {
+                btn.innerText = "Copy Output";
+            }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
