@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1Mon ⇄ Mon Converter</title>
+    <style>
+        @font-face {
+            font-family: 'A1Mon';
+            src: url('a1mon.ttf') format('truetype');
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Mon';
+            src: url('mon.ttf') format('truetype');
+            font-display: swap;
+        }
+
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent: #a855f7;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --input-bg: rgba(15, 23, 42, 0.6);
+            --focus-ring: rgba(99, 102, 241, 0.4);
+            --font-a1mon: 'A1Mon', sans-serif;
+            --font-mon: 'Mon', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            padding: 2.25rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.75rem;
+        }
+
+        header h1 {
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.35rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-toggle {
+            display: inline-flex;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 0.3rem;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+        }
+
+        .mode-btn {
+            padding: 0.5rem 1.25rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .action-tools {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .tool-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tool-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .converter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 720px) {
+            .converter-grid {
+                grid-template-columns: 1fr;
+            }
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .mode-toggle {
+                width: 100%;
+            }
+            .mode-btn {
+                flex: 1;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: 0.02em;
+        }
+
+        textarea {
+            width: 100%;
+            height: 240px;
+            padding: 1rem;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .font-a1mon {
+            font-family: var(--font-a1mon);
+        }
+
+        .font-mon {
+            font-family: var(--font-mon);
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        footer {
+            margin-top: 2.25rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--card-border);
+            padding-top: 1.25rem;
+        }
+
+        footer a {
+            color: #818cf8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: #c084fc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>A1Mon ⇄ Mon Converter</h1>
+        <p>Bidirectional real-time font conversion tool</p>
+    </header>
+
+    <div class="controls-bar">
+        <div class="mode-toggle">
+            <button type="button" class="mode-btn active" id="btnA1ToMon" onclick="setMode('a12mon')">A1Mon → Mon</button>
+            <button type="button" class="mode-btn" id="btnMonToA1" onclick="setMode('mon2a1')">Mon → A1Mon</button>
+        </div>
+
+        <div class="action-tools">
+            <button type="button" class="tool-btn" onclick="swapText()">⇄ Swap</button>
+            <button type="button" class="tool-btn" onclick="clearFields()">🗑 Clear</button>
+            <button type="button" class="tool-btn" id="copyBtn" onclick="copyResult()">📋 Copy</button>
+            <button type="button" class="tool-btn" onclick="downloadTxt()">💾 Download</button>
+        </div>
+    </div>
+
+    <div class="converter-grid">
+        <div class="input-group">
+            <div class="label-row">
+                <label for="txtInput" id="lblInput">A1Mon Input:</label>
+            </div>
+            <textarea id="txtInput" class="font-a1mon" placeholder="tkjsutjmlikj eaw>njmnj dN.Y$·vií"></textarea>
+        </div>
+
+        <div class="input-group">
+            <div class="label-row">
+                <label for="txtResult" id="lblResult">Mon Output:</label>
+            </div>
+            <textarea id="txtResult" class="font-mon" readonly placeholder="Converted text will appear here..."></textarea>
+        </div>
+    </div>
+
+    <footer>
+        Created by JaMonRott<br>
+        <a href="https://it-villa.blogspot.com" target="_blank">https://it-villa.blogspot.com</a><br><br>
+		<a href="https://info.flagcounter.com/gtrh" target="_blank"><img src="https://s01.flagcounter.com/mini/gtrh/bg_00023B/txt_FFFFFF/border_474747/flags_0/" alt="Flag Counter" border="0"></a>
+    </footer>
+</div>
+
+<script>
+    let currentMode = 'a12mon';
+    const a1ToMonMap = {
+        107: 4096, 75: 4097, 103: 4098, 71: 4099, 99: 4100, 115: 4101, 83: 4102,
+        122: 4103, 123: 4104, 205: 4105, 118: 4106, 33: 4107, 35: 4108, 59: 4109,
+        37: 4110, 36: 4111, 116: 4112, 84: 4113, 100: 4114, 68: 4115, 110: 4116,
+        112: 4117, 102: 4118, 98: 4119, 66: 4120, 109: 4121, 121: 4122, 114: 4123,
+        108: 4124, 119: 4125, 113: 4126, 104: 4127, 200: 4128, 47: 4176, 97: 4129,
+        198: 4130, 187: 4131, 43: 4132, 120: 4133, 232: 4134, 196: 4135, 191: 4136,
+        235: 4137, 236: 4138, 62: 4139, 46: 4140, 105: 4141, 74: 4142, 117: 4143,
+        85: 4144, 101: 4145, 89: 4146, 213: 4147, 234: 4148, 111: 4149, 183: 4150,
+        60: 4151, 44: 4152, 106: 4153, 91: 4154, 92: 4155, 87: 4156, 72: 4157,
+        78: 4158, 77: 4159, 48: 4160, 49: 4161, 50: 4162, 51: 4163, 52: 4164,
+        53: 4165, 54: 4166, 55: 4167, 56: 4168, 57: 4169, 180: 4170, 226: 4171,
+        207: 4172, 185: 4173, 211: 4174, 61: 4175, 227: 4186, 67: 4187, 76: 4188,
+        230: 4189, 189: 4190, 65: 4191, 210: 4192, 201: 4193, 224: 4194, 172: 4195,
+        225: 4196, 203: 4197, 166: 4198, 90: 4200, 238: 4201, 88: 4202, 86: 4203,
+        241: 4204, 242: 4205, 171: 4206, 182: 4207, 192: 4208, 208: 4209, 184: 4211,
+        161: 4213, 175: 4214, 80: 4216, 70: 4217, 212: 4218, 218: 4219, 63: 4220,
+        186: 4221, 93: 4222, 124: 4223, 125: 4224, 163: 4225, 197: 4226, 165: 4227,
+        176: 4228, 202: 4229, 81: 4230, 167: 4231, 233: 4232, 231: 4233, 228: 4234,
+        169: 4237, 195: 4238, 215: 4239, 82: 4240, 64: 4241, 45: 4242, 178: 4244,
+        193: 4245, 220: 4246, 219: 4247, 73: 4248, 79: 4249, 179: 4250, 206: 4251,
+        58: 4252, 69: 4253, 244: 4254, 34: 34, 38: 47, 39: 39, 164: 39, 245: 39,
+        40: 40, 41: 41, 42: 63, 94: 37, 95: 61, 162: 43, 248: 45, 170: 215, 249: 247,
+        254: 247
+    };
+    const monToA1Map = {
+        4096: 107, 4097: 75, 4098: 103, 4099: 71, 4100: 99, 4101: 115, 4102: 83,
+        4103: 122, 4104: 123, 4105: 205, 4106: 118, 4107: 33, 4108: 35, 4109: 59,
+        4110: 37, 4111: 36, 4112: 116, 4113: 84, 4114: 100, 4115: 68, 4116: 110,
+        4117: 112, 4118: 102, 4119: 98, 4120: 66, 4121: 109, 4122: 121, 4123: 114,
+        4124: 108, 4125: 119, 4126: 113, 4127: 104, 4128: 200, 4176: 47, 4129: 97,
+        4130: 198, 4131: 187, 4132: 43, 4133: 120, 4134: 232, 4135: 196, 4136: 191,
+        4137: 235, 4138: 236, 4139: 62, 4140: 46, 4141: 105, 4142: 74, 4143: 117,
+        4144: 85, 4145: 101, 4146: 89, 4147: 213, 4148: 234, 4149: 111, 4150: 183,
+        4151: 60, 4152: 44, 4153: 106, 4154: 91, 4155: 92, 4156: 87, 4157: 72,
+        4158: 78, 4159: 77, 4160: 48, 4161: 49, 4162: 50, 4163: 51, 4164: 52,
+        4165: 53, 4166: 54, 4167: 55, 4168: 56, 4169: 57, 4170: 180, 4171: 226,
+        4172: 207, 4173: 185, 4174: 211, 4175: 61, 4186: 227, 4187: 67, 4188: 76,
+        4189: 230, 4190: 189, 4191: 65, 4192: 210, 4193: 201, 4194: 224, 4195: 172,
+        4196: 225, 4197: 203, 4198: 166, 4199: 166, 4200: 90, 4201: 238, 4202: 88,
+        4203: 86, 4204: 241, 4205: 242, 4206: 171, 4207: 182, 4208: 192, 4209: 208,
+        4210: 208, 4211: 184, 4212: 184, 4213: 161, 4214: 175, 4215: 236, 4216: 80,
+        4217: 70, 4218: 212, 4219: 218, 4220: 63, 4221: 186, 4222: 93, 4223: 124,
+        4224: 125, 4225: 163, 4226: 197, 4227: 165, 4228: 176, 4229: 202, 4230: 81,
+        4231: 167, 4232: 233, 4233: 231, 4234: 228, 4235: 232, 4236: 235, 4237: 169,
+        4238: 195, 4239: 215, 4240: 82, 4241: 64, 4242: 45, 4243: 123, 4244: 178,
+        4245: 193, 4246: 220, 4247: 219, 4248: 73, 4249: 79, 4250: 179, 4251: 206,
+        4252: 58, 4253: 69, 4254: 244, 34: 34, 47: 38, 39: 245, 40: 40, 41: 41,
+        63: 42, 37: 94, 61: 95, 43: 162, 45: 248, 215: 170, 247: 254
+    };
+
+    function convertText() {
+        const inputStr = document.getElementById("txtInput").value;
+        const activeMap = (currentMode === 'a12mon') ? a1ToMonMap : monToA1Map;
+        let result = "";
+
+        for (let i = 0; i < inputStr.length; i++) {
+            let keycode = inputStr.charCodeAt(i);
+            if (activeMap[keycode] !== undefined) {
+                keycode = activeMap[keycode];
+            }
+            result += String.fromCharCode(keycode);
+        }
+
+        document.getElementById("txtResult").value = result;
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        const txtInput = document.getElementById("txtInput");
+        const txtResult = document.getElementById("txtResult");
+        const lblInput = document.getElementById("lblInput");
+        const lblResult = document.getElementById("lblResult");
+        const btnA1ToMon = document.getElementById("btnA1ToMon");
+        const btnMonToA1 = document.getElementById("btnMonToA1");
+
+        if (mode === 'a12mon') {
+            btnA1ToMon.classList.add("active");
+            btnMonToA1.classList.remove("active");
+            lblInput.innerText = "A1Mon Input:";
+            lblResult.innerText = "Mon Output:";
+            txtInput.className = "font-a1mon";
+            txtResult.className = "font-mon";
+            txtInput.placeholder = "tkjsutjmlikj eaw>njmnj dN.Y$·vií";
+        } else {
+            btnMonToA1.classList.add("active");
+            btnA1ToMon.classList.remove("active");
+            lblInput.innerText = "Mon Input:";
+            lblResult.innerText = "A1Mon Output:";
+            txtInput.className = "font-mon";
+            txtResult.className = "font-a1mon";
+            txtInput.placeholder = "Type or paste Mon text here...";
+        }
+
+        convertText();
+    }
+
+    function swapText() {
+        const txtInput = document.getElementById("txtInput");
+        const txtResult = document.getElementById("txtResult");
+        const outputVal = txtResult.value;
+
+        setMode(currentMode === 'a12mon' ? 'mon2a1' : 'a12mon');
+        txtInput.value = outputVal;
+        convertText();
+    }
+
+    function clearFields() {
+        document.getElementById("txtInput").value = "";
+        document.getElementById("txtResult").value = "";
+    }
+
+    function copyResult() {
+        const outputText = document.getElementById("txtResult").value;
+        if (!outputText) return;
+
+        navigator.clipboard.writeText(outputText).then(function() {
+            const btn = document.getElementById("copyBtn");
+            btn.innerText = "✔ Copied!";
+            setTimeout(function() {
+                btn.innerText = "📋 Copy";
+            }, 2000);
+        });
+    }
+
+    function downloadTxt() {
+        const text = document.getElementById("txtResult").value;
+        if (!text) return;
+
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `converted_${currentMode}.txt`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    document.getElementById("txtInput").addEventListener("input", convertText);
+</script>
+
+</body>
+</html>
