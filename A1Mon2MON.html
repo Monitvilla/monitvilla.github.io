@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A1Mon ⇄ MON Converter</title>
+    <style>
+        @font-face {
+            font-family: 'A1Mon';
+            src: url('A1Mon2Mon_wangKa/a1mon.ttf') format('truetype');
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'MON';
+            src: url('MON.ttf') format('truetype');
+            font-display: swap;
+        }
+
+        :root {
+            --bg-gradient: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --primary: #10b981;
+            --primary-hover: #059669;
+            --accent: #06b6d4;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --input-bg: rgba(2, 6, 23, 0.6);
+            --focus-ring: rgba(16, 185, 129, 0.4);
+            --font-A1Mon: 'A1Mon', system-ui, sans-serif;
+            --font-mon: 'MON', system-ui, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 2.25rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            background: linear-gradient(to right, #34d399, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-toggle {
+            display: inline-flex;
+            background: rgba(2, 6, 23, 0.8);
+            padding: 0.35rem;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .mode-btn {
+            padding: 0.6rem 1.25rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+        }
+
+        .action-tools {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .tool-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            padding: 0.55rem 1.1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tool-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .converter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 720px) {
+            .converter-grid {
+                grid-template-columns: 1fr;
+            }
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .mode-toggle {
+                width: 100%;
+            }
+            .mode-btn {
+                flex: 1;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: 0.02em;
+        }
+
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 1.1rem;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            background-color: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .font-A1Mon {
+            font-family: var(--font-A1Mon);
+        }
+
+        .font-mon {
+            font-family: var(--font-mon);
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--card-border);
+            padding-top: 1.25rem;
+        }
+
+        footer a {
+            color: #38bdf8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: #34d399;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>A1Mon ⇄ MON Converter</h1>
+        <p>Bidirectional Font Mapping & Real-Time Converter</p>
+    </header>
+
+    <div class="controls-bar">
+        <div class="mode-toggle">
+            <button type="button" class="mode-btn active" id="btnUniToMon" onclick="setMode('uni2mon')">A1Mon → MON</button>
+            <button type="button" class="mode-btn" id="btnMonToUni" onclick="setMode('mon2uni')">MON → A1Mon</button>
+        </div>
+
+        <div class="action-tools">
+            <button type="button" class="tool-btn" onclick="swapText()">⇄ Swap</button>
+            <button type="button" class="tool-btn" onclick="clearFields()">🗑 Clear</button>
+            <button type="button" class="tool-btn" id="copyBtn" onclick="copyResult()">📋 Copy</button>
+            <button type="button" class="tool-btn" onclick="downloadTxt()">💾 Download</button>
+        </div>
+    </div>
+
+    <div class="converter-grid">
+        <div class="input-group">
+            <div class="label-row">
+                <label for="txtInput" id="lblInput">A1Mon Input:</label>
+            </div>
+            <textarea id="txtInput" class="font-A1Mon" placeholder="tkjsutjmlikj eaw>njmnj dN.Y$·vi"></textarea>
+        </div>
+
+        <div class="input-group">
+            <div class="label-row">
+                <label for="txtResult" id="lblResult">MON Output:</label>
+            </div>
+            <textarea id="txtResult" class="font-mon" readonly placeholder="rvdufªyHifwkJ*Sf rHuf='mJ!Ha7mifèèè"></textarea>
+        </div>
+    </div>
+
+    <footer>
+        Developed by JaMonRott<br>
+        <a href="https://it-villa.blogspot.com" target="_blank">https://it-villa.blogspot.com</a><br><br>
+        <a href="https://info.flagcounter.com/FiQP" target="_blank"><img src="https://s05.flagcounter.com/mini/FiQP/bg_000000/txt_FFFFFF/border_292929/flags_0/" alt="Flag Counter" border="0"></a>
+    </footer>
+</div>
+
+<script>
+    let currentMode = 'uni2mon';
+
+    const mon2uniMap = {
+        213: [88, 243],
+        176: [116, 220],
+        184: [194, 215],
+        201: [103, 172],
+        211: [215, 220],
+        212: [36, 241],
+        230: [245, 245],
+        251: [252, 252],
+        33: 36, 34: 77, 35: 192, 36: 79, 37: 33, 38: 82, 39: 78, 40: 40, 41: 41,
+        42: 103, 43: 161, 44: 121, 45: 188, 46: 122, 47: 96, 48: 48, 49: 49, 50: 50,
+        51: 51, 52: 52, 53: 53, 54: 54, 55: 114, 56: 56, 57: 57, 58: 227, 59: 44,
+        60: 175, 61: 100, 62: 90, 63: 226, 64: 64, 65: 98, 66: 93, 67: 71, 68: 74,
+        69: 215, 70: 73, 71: 87, 72: 183, 73: 224, 74: 89, 75: 213, 76: 234, 77: 76,
+        78: 236, 79: 120, 80: 203, 81: 201, 82: 63, 83: 72, 84: 69, 85: 210, 86: 200,
+        87: 208, 88: 184, 89: 80, 90: 67, 91: 104, 92: 47, 93: 68, 94: 218, 95: 65,
+        96: 59, 97: 101, 98: 66, 99: 75, 100: 105, 101: 110, 102: 106, 103: 62,
+        104: 173, 105: 99, 106: 111, 107: 117, 108: 85, 109: 46, 110: 118, 111: 113,
+        112: 115, 113: 83, 114: 109, 115: 91, 116: 97, 117: 107, 118: 108, 119: 116,
+        120: 84, 121: 112, 122: 102, 123: 191, 124: 189, 125: 45, 126: 58, 161: 242,
+        163: 42, 164: 35, 169: 125, 170: 124, 171: 206, 177: 243, 180: 55, 181: 167,
+        183: 206, 187: 131, 188: 171, 189: 229, 192: 202, 199: 70, 200: 212, 204: 81,
+        208: 170, 218: 182, 220: 187, 223: 193, 224: 235, 225: 225, 226: 195, 227: 232,
+        228: 169, 229: 193, 232: 60, 233: 179, 235: 252, 237: 245, 239: 249, 240: 162,
+        241: 38, 242: 37, 243: 205, 244: 198, 246: 39, 247: 95, 249: 223, 255: 34
+    };
+
+    const uni2monMapDerived = {};
+    const uniSequences = [];
+
+    for (const [monCodeStr, uniVal] of Object.entries(mon2uniMap)) {
+        const monCode = parseInt(monCodeStr, 10);
+        if (Array.isArray(uniVal)) {
+            const seqStr = String.fromCharCode(...uniVal);
+            uniSequences.push({
+                seq: seqStr,
+                target: String.fromCharCode(monCode)
+            });
+        } else {
+            uni2monMapDerived[uniVal] = monCode;
+        }
+    }
+
+    uniSequences.sort((a, b) => b.seq.length - a.seq.length);
+
+    function convertText() {
+        const inputStr = document.getElementById("txtInput").value;
+        let result = "";
+
+        if (currentMode === 'uni2mon') {
+            let tempStr = inputStr;
+
+            for (const item of uniSequences) {
+                tempStr = tempStr.split(item.seq).join(item.target);
+            }
+
+            for (let i = 0; i < tempStr.length; i++) {
+                let code = tempStr.charCodeAt(i);
+                if (uni2monMapDerived[code] !== undefined) {
+                    result += String.fromCharCode(uni2monMapDerived[code]);
+                } else {
+                    result += tempStr[i];
+                }
+            }
+        } else {
+            
+            for (let i = 0; i < inputStr.length; i++) {
+                let code = inputStr.charCodeAt(i);
+                let val = mon2uniMap[code];
+                if (val !== undefined) {
+                    if (Array.isArray(val)) {
+                        result += String.fromCharCode(...val);
+                    } else {
+                        result += String.fromCharCode(val);
+                    }
+                } else {
+                    result += inputStr[i];
+                }
+            }
+        }
+
+        document.getElementById("txtResult").value = result;
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        const txtInput = document.getElementById("txtInput");
+        const txtResult = document.getElementById("txtResult");
+        const lblInput = document.getElementById("lblInput");
+        const lblResult = document.getElementById("lblResult");
+        const btnUniToMon = document.getElementById("btnUniToMon");
+        const btnMonToUni = document.getElementById("btnMonToUni");
+
+        if (mode === 'uni2mon') {
+            btnUniToMon.classList.add("active");
+            btnMonToUni.classList.remove("active");
+            lblInput.innerText = "A1Mon Input:";
+            lblResult.innerText = "MON Output:";
+            txtInput.className = "font-A1Mon";
+            txtResult.className = "font-mon";
+            txtInput.placeholder = "tkjsutjmlikj eaw>njmnj dN.Y$·vi";
+        } else {
+            btnMonToUni.classList.add("active");
+            btnUniToMon.classList.remove("active");
+            lblInput.innerText = "MON Input:";
+            lblResult.innerText = "A1Mon Output:";
+            txtInput.className = "font-mon";
+            txtResult.className = "font-A1Mon";
+            txtInput.placeholder = "wufpkwfrvduf ref ='mJ!Hndèèè";
+        }
+
+        convertText();
+    }
+
+    function swapText() {
+        const txtInput = document.getElementById("txtInput");
+        const txtResult = document.getElementById("txtResult");
+        const outputVal = txtResult.value;
+
+        setMode(currentMode === 'uni2mon' ? 'mon2uni' : 'uni2mon');
+        txtInput.value = outputVal;
+        convertText();
+    }
+
+    function clearFields() {
+        document.getElementById("txtInput").value = "";
+        document.getElementById("txtResult").value = "";
+    }
+
+    function copyResult() {
+        const outputText = document.getElementById("txtResult").value;
+        if (!outputText) return;
+
+        navigator.clipboard.writeText(outputText).then(function() {
+            const btn = document.getElementById("copyBtn");
+            btn.innerText = "✔ Copied!";
+            setTimeout(function() {
+                btn.innerText = "📋 Copy";
+            }, 2000);
+        });
+    }
+
+    function downloadTxt() {
+        const text = document.getElementById("txtResult").value;
+        if (!text) return;
+
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `A1Mon_mon_converted_${currentMode}.txt`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    document.getElementById("txtInput").addEventListener("input", convertText);
+</script>
+
+</body>
+</html>
