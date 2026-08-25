@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8" />
@@ -20,21 +20,21 @@
         }
 
         body {
-			zoom: 1.5;
             background-color: #dcdcdc;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-			min-height: 100dvh;
-			overflow: hidden;
+            min-height: 100dvh;
+            overflow: hidden;
             font-family: '02Mon(Omar Ray Cham)office', 'Pyidaungsu', sans-serif;
         }
 
         .calendar-widget {
             width: 130px;
             height: 185px;
-			transform: translateY(-85px);
+            transform: scale(1.5);
+            transform-origin: center center;
             background: url('bg.png') no-repeat 0 0;
             background-size: 130px 185px;
             padding-top: 41px; 
@@ -45,11 +45,12 @@
             color: #000000;
             text-align: center;
         }
-		.mcal-sm {
-			margin-top:1px;
-			margin-bottom:2px;
-			font-size: 10px;
-		}
+
+        .mcal-sm {
+            margin-top: 1px;
+            margin-bottom: 2px;
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
@@ -423,6 +424,6 @@ function rSetLang(lang)
 	'0': '၀','1': '၁','2': '၂','3': '၃','4': '၄','5': '၅','6': '၆','7': '၇',
 	'8': '၈','9': '၉',',':'','.':''};}
 }
-</script>
+    </script>
 </body>
 </html>
