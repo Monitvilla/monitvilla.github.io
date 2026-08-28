@@ -1,0 +1,689 @@
+﻿<!DOCTYPE html>
+<html lang="my-Mon">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mon Calendar</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#b71c1c" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Mon Calendar" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+    <style type="text/css">
+        @import url('https://monitvilla.github.io/monFont.css');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100dvh;
+            font-family: '02Mon(Omar Ray Cham)office', 'Pyidaungsu', sans-serif;
+        }
+
+        .calendar-widget {
+            width: 230px;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+            overflow: hidden;
+            border: 1px solid #e5e5e5;
+            padding-bottom: 12px;
+        }
+
+        .cal-header {
+            background: linear-gradient(180deg, #d32f2f 0%, #b71c1c 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 9px 10px 9px 13px;
+            font-size: 22px;
+            font-family: 'ပရၚ်တဲတၟေၚ် နူ(အမ်မြာဲဆာန်)';
+            position: relative;
+            border-bottom: 2px dashed rgba(255, 255, 255, 0.5);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5); 
+        }
+
+        .cal-header::before, .cal-header::after {
+            content: '';
+            position: absolute;
+            top: 7px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+        }
+        .cal-header::before { left: 14px; }
+        .cal-header::after { right: 14px; }
+
+        .cal-grid-top {
+            display: flex;
+            padding: 8px;
+            gap: 6px;
+        }
+
+        .cal-card-box {
+            flex: 1;
+            background: #f1f1f1;
+            border-radius: 10px;
+            padding: 7px 4px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 84px; 
+            font-size: 14px;
+        }
+
+        .year-tag {
+            background-color: #fff3e0;
+            color: #d84315;
+            border-radius: 14px;
+            padding: 4px 8px;
+            font-size: 16px;
+            display: inline-block;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .moon-day {
+            color: #d32f2f;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 0.8;
+            min-height: 22px;
+        }
+
+        .moon-status {
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        .cal-list {
+            padding: 0 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .cal-list-item {
+            display: flex;
+            align-items: center;
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 6px 8px;
+            font-size: 14.5px;
+            color: #333;
+            min-height: 38px;
+            transition: background-color 0.2s ease;
+        }
+
+        .cal-list-item .icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cal-list-item .text-content {
+            flex-grow: 1;
+            line-height: 1.2;
+        }
+
+        .cal-list-item .arrow {
+            color: #ccc;
+            font-size: 11px;
+            font-family: Arial, sans-serif;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1px;
+            margin-top: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .nav-btn {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            font-weight: bold;
+            font-size: 11px;
+            color: #666;
+            transition: background 0.1s ease;
+        }
+
+        .nav-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .nav-btn.btn-red {
+            color: #d32f2f;
+        }
+
+        .date-display {
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 0 4px;
+            user-select: none;
+        }
+
+        /* PWA Install Button Styles */
+        .install-container {
+            display: none;
+            text-align: center;
+            margin-top: 8px;
+            padding: 0 8px;
+        }
+
+        .btn-install {
+            width: 100%;
+            background: #2e7d32;
+            color: #ffffff;
+            border: none;
+            padding: 6px 0;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .btn-install:hover {
+            background: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calendar-widget">
+        <div class="cal-header">ကြက္ကဒိန်မန်</div>
+        <div id="mcalr" lang="my-Mon"></div>
+        <div id="pwaInstallBox" class="install-container">
+            <button id="pwaInstallBtn" class="btn-install">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Install App
+            </button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('./sw.js')
+                .then(function(reg) { console.log('SW Registered:', reg.scope); })
+                .catch(function(err) { console.error('SW Registration Failed:', err); });
+        });
+    }
+
+    var deferredPrompt;
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        var installBox = document.getElementById('pwaInstallBox');
+        if (installBox) installBox.style.display = 'block';
+    });
+
+    document.getElementById('pwaInstallBtn').addEventListener('click', function() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(function(choiceResult) {
+                if (choiceResult.outcome === 'accepted') {
+                    document.getElementById('pwaInstallBox').style.display = 'none';
+                }
+                deferredPrompt = null;
+            });
+        }
+    });
+
+//Original Author: Yan Naing Aye | http://mmcal.blogspot.com
+	//Version: 201508311115 (only for ME 1312 and later)
+	//Modified by: JaMonRott | http://it-villa.blogspot.com
+    var mc_no=0,grX;
+    rmDisp();
+    document.addEventListener("DOMContentLoaded", function(){rmDisp();});
+
+    function rmDisp() {
+        var ormcal, rmcalLang, rLang;
+        do {
+            ormcal = document.getElementById('mcalr');
+            if (ormcal === null) break;
+
+            ormcal.id = "mcalr" + (mc_no++).toString();
+            rmcalLang = ormcal.lang;
+
+            rLang = 0;
+            if (rmcalLang == "my-Mon" || rmcalLang == "my-mon") rLang = 2;
+            else if (rmcalLang == "UniMon") rLang = 4;
+            else if (rmcalLang == "Mon") rLang = 5;
+            else if (rmcalLang == "my-En" || rmcalLang == "my-en") rLang = 1;
+            else if (rmcalLang == "my-Z1" || ormcal.style.fontFamily == "Zawgyi-One" || rmcalLang == "my-z1") rLang = 3;
+
+            grX = rSetLang(rLang);
+
+            ormcal.style.textDecoration = "none";
+            if (rLang == 3) ormcal.style.fontFamily = "Zawgyi-One";
+
+            ormcal.currentDate = new Date();
+
+            (function (targetEl, langIndex) {
+                function render() {
+                    var data = rmStrData(langIndex, targetEl.currentDate);
+
+                    var d = targetEl.currentDate;
+                    var dayNum = d.getDate();
+                    var monthNum = d.getMonth() + 1;
+                    var dd = (dayNum < 10 ? '0' : '') + dayNum;
+                    var mm = (monthNum < 10 ? '0' : '') + monthNum;
+                    var yyyy = d.getFullYear();
+                    var dateStr = dd + '/' + mm + '/' + yyyy;
+
+                    var moonDayDisplay = data.moonDay ? data.moonDay : '&nbsp;';
+
+                    targetEl.innerHTML = 
+                        '<div class="cal-grid-top">' +
+                            '<div class="cal-card-box">' +
+                                '<div>' + data.myearLabel + '</div>' +
+                                '<div><span class="year-tag">' + data.myearVal + '</span></div>' +
+                            '</div>' +
+                            '<div class="cal-card-box">' +
+                                '<div>' + data.monthName + '</div>' +
+                                '<div class="moon-day">' + moonDayDisplay + '</div>' +
+                                '<div class="moon-status">' + data.moonStatus + '</div>' +
+                            '</div>' +
+                        '</div>' +
+
+                        '<div class="cal-list">' +
+                            '<div class="cal-list-item">' +
+                                '<div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/></svg></div>' +
+                                '<div class="text-content">' + data.syear + '</div>' +
+                                '<div class="arrow">&gt;</div>' +
+                            '</div>' +
+
+                            '<div class="cal-list-item">' +
+                                '<div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>' +
+                                '<div class="text-content"' + data.dayStyle + '>' + data.dayText + '</div>' +
+                                '<div class="arrow">&gt;</div>' +
+                            '</div>' +
+
+                            '<div class="cal-list-item">' +
+                                '<div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7b1fa2" stroke-width="2.2"><path d="M12 2v6M12 18v4M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M18 12h4"/><circle cx="12" cy="12" r="4"/></svg></div>' +
+                                '<div class="text-content" style="' + data.sabbathStyle + '">' + data.sabbathText + '</div>' +
+                                '<div class="arrow">&gt;</div>' +
+                            '</div>' +
+
+                            '<div class="cal-list-item" style="' + data.tideStyle + '">' +
+                                '<div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f57c00" stroke-width="2.2"><path d="M2 6c.6 0 1.2.2 1.6.6L5 8l1.4-1.4C6.8 6.2 7.4 6 8 6s1.2.2 1.6.6L11 8l1.4-1.4c.4-.4 1-.6 1.6-.6s1.2.2 1.6.6L17 8l1.4-1.4c.4-.4 1-.6 1.6-.6"/><path d="M2 12c.6 0 1.2.2 1.6.6L5 14l1.4-1.4c.4-.4 1-.6 1.6-.6s1.2.2 1.6.6L11 14l1.4-1.4c.4-.4 1-.6 1.6-.6s1.2.2 1.6.6L17 14l1.4-1.4c.4-.4 1-.6 1.6-.6"/><path d="M2 18c.6 0 1.2.2 1.6.6L5 20l1.4-1.4c.4-.4 1-.6 1.6-.6s1.2.2 1.6.6L11 20l1.4-1.4c.4-.4 1-.6 1.6-.6s1.2.2 1.6.6L17 20l1.4-1.4c.4-.4 1-.6 1.6-.6"/></svg></div>' +
+                                '<div class="text-content">' + data.tideText + '</div>' +
+                                '<div class="arrow">&gt;</div>' +
+                            '</div>' +
+                        '</div>' +
+
+                        '<div class="nav-controls">' +
+                            '<span class="nav-btn btn-dy-prev" title="Previous Day">&lt;</span>' +
+                            '<span class="nav-btn btn-mo-prev btn-red" title="Previous Month">&lt;</span>' +
+                            '<span class="nav-btn btn-yr-prev" title="Previous Year">&lt;</span>' +
+                            '<span class="date-display mcal-btn-today" title="Click to reset to Today">' + dateStr + '</span>' +
+                            '<span class="nav-btn btn-yr-next" title="Next Year">&gt;</span>' +
+                            '<span class="nav-btn btn-mo-next btn-red" title="Next Month">&gt;</span>' +
+                            '<span class="nav-btn btn-dy-next" title="Next Day">&gt;</span>' +
+                        '</div>';
+
+                    function bindClick(selector, action) {
+                        targetEl.querySelector(selector).onclick = function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            action(targetEl.currentDate);
+                            render();
+                        };
+                    }
+
+                    bindClick('.btn-dy-prev', function(dt) { dt.setDate(dt.getDate() - 1); });
+                    bindClick('.btn-dy-next', function(dt) { dt.setDate(dt.getDate() + 1); });
+
+                    bindClick('.btn-mo-prev', function(dt) { dt.setMonth(dt.getMonth() - 1); });
+                    bindClick('.btn-mo-next', function(dt) { dt.setMonth(dt.getMonth() + 1); });
+
+                    bindClick('.btn-yr-prev', function(dt) { dt.setFullYear(dt.getFullYear() - 1); });
+                    bindClick('.btn-yr-next', function(dt) { dt.setFullYear(dt.getFullYear() + 1); });
+
+                    bindClick('.mcal-btn-today', function() { targetEl.currentDate = new Date(); });
+                }
+
+                render();
+            })(ormcal, rLang);
+
+        } while (1);
+    }
+
+    function rGetDawnTime(mm, rLang) {
+        var times = {
+            1: "၅:၀၀", 7: "၅:၀၀", 2: "၄:၅၀", 6: "၄:၅၀", 3: "၄:၄၀", 5: "၄:၄၀",  
+            0: "၄:၃၀", 4: "၄:၃၀", 8: "၅:၁၀", 12: "၅:၁၀", 9: "၅:၂၀", 11: "၅:၂၀", 10: "၅:၃၀"              
+        };
+        var enTimes = {
+            1: "5:00", 7: "5:00", 2: "4:50", 6: "4:50", 3: "4:40", 5: "4:40",
+            0: "4:30", 4: "4:30", 8: "5:10", 12: "5:10", 9: "5:20", 11: "5:20", 10: "5:30"
+        };
+        return (rLang === 1) ? (enTimes[mm] || "5:00") : (times[mm] || "၅:၀၀");
+    }
+
+    function rFormatClock(h, m) {
+        var mm = (m < 10 ? "0" : "") + m;
+        var str = h.toString() + ":" + mm;
+        var res = "";
+        for (var i = 0; i < str.length; i++) {
+            var ch = str.charAt(i);
+            res += (grX[ch] !== undefined) ? grX[ch] : ch;
+        }
+        return res;
+    }
+
+    function rGetTideTimeStr(d) {
+        var htMins = 765 + (d - 1) * 45; 
+        var h_ht = Math.floor(htMins / 60) % 12;
+        if (h_ht === 0) h_ht = 12;
+        var m_ht = htMins % 60;
+
+        var ltMins = htMins + 360;
+        var h_lt = Math.floor(ltMins / 60) % 12;
+        if (h_lt === 0) h_lt = 12;
+        var m_lt = ltMins % 60;
+
+        return {
+            ht: rFormatClock(h_ht, m_ht),
+            lt: rFormatClock(h_lt, m_lt)
+        };
+    }
+
+    function rChkPyathada(mm, wd, hours) {
+        if (mm === 1 || mm === 5 || mm === 9) return (wd === 5 || wd === 0);
+        if (mm === 2 || mm === 6 || mm === 10) return (wd === 4 || wd === 6);
+        if (mm === 3 || mm === 7 || mm === 11) return (wd === 1 || wd === 2);
+        if (mm === 0 || mm === 4 || mm === 8 || mm === 12) {
+            if (wd === 3) return true;
+            if (wd === 4 && hours >= 12) return true;
+        }
+        return false;
+    }
+
+    function rChkYatyaza(mm, wd, hours) {
+        if (mm === 1 || mm === 5 || mm === 9) return (wd === 4 || wd === 6);
+        if (mm === 2 || mm === 6 || mm === 10) return (wd === 5 || wd === 0);
+        if (mm === 3 || mm === 7 || mm === 11) return (wd === 3 || wd === 5);
+        if (mm === 0 || mm === 4 || mm === 8 || mm === 12) {
+            if (wd === 1) return true;
+            if (wd === 4 && hours < 12) return true;
+        }
+        return false;
+    }
+
+    function rmStrData(rLang, dt) {
+        if (!dt) dt = new Date(); 
+        var gy = dt.getFullYear(); 
+        var gm = dt.getMonth() + 1;
+        var gd = dt.getDate(); 
+        var js = rg2j(gy,gm,gd); 
+        var M = rj2m(js);
+        var hours = dt.getHours();
+        var minutes = dt.getMinutes();
+        var isBeforeDawn = (hours < 4) || (hours === 4 && minutes < 50);
+        var isAfterApril16 = (gm > 4) || (gm === 4 && gd >= 17);
+        var isKasonWaning1 = (M.mm === 2 && M.ms === 2 && M.d === 1);
+        var isBeforeKasonWaning1Dawn = (M.mm === 1) || 
+                                       (M.mm === 2 && (M.ms === 0 || M.ms === 1)) || 
+                                       (isKasonWaning1 && isBeforeDawn);
+        var sOffset = (isAfterApril16 && isBeforeKasonWaning1Dawn) ? 1181 : 1182;
+        
+        var myearLabel = grX["Myanmar Year"];
+        var myearVal = rn2s(M.my) + " " + grX['Tho'];
+        var syear = grX['Sasana Year'] + " - " + rn2s(M.my + sOffset) + " " + grX['Tho'];
+
+        var mma = ["First Waso","Tagu","Kason","Nayon","Waso","Wagaung","Tawthalin",
+                 "Thadingyut","Tazaungmon","Nadaw","Pyatho","Tabodwe","Tabaung"];
+
+        var monthName = "";
+        if (M.mmt) monthName += grX['Late']; 
+        if (M.myt && M.mm == 4) monthName += grX['Second Waso']; 
+        else monthName += grX[mma[M.mm]];
+
+        var msa = ["waxing","full moon","waning","new moon"];
+        
+        var moonDay = "";
+        if (M.ms === 0 || M.ms === 2) {
+            moonDay = rn2s(M.d);
+        } else if (M.ms === 1) {
+            moonDay = rn2s(15);
+        } else if (M.ms === 3) {
+            moonDay = rn2s(M.mml - 15);
+        }
+
+        var moonStatus = grX[msa[M.ms]];
+
+        var isVassa = false;
+        if (M.mm === 4 && M.md >= 15) isVassa = true;
+        else if (M.mm === 5 || M.mm === 6) isVassa = true;
+        else if (M.mm === 7 && M.md <= 15) isVassa = true;
+
+        var wda = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'];  
+        var dayText = grX[wda[M.wd]] + grX['Nay'];
+
+        if (rChkPyathada(M.mm, M.wd, hours)) dayText += " ၊ " + grX['Pyathada'];
+        if (rChkYatyaza(M.mm, M.wd, hours)) dayText += " ၊ " + grX['Yatyaza'];
+
+        var isSundayHoliday = (!isVassa && M.wd === 1);
+        var dayStyle = isSundayHoliday ? " style=\"color: #cc0000;\"" : "";
+
+        var dawnTime = rGetDawnTime(M.mm, rLang);
+        var isSabbath = (M.md==8)||(M.md==15)||(M.md==22)||(M.md==M.mml);
+        var isSabbathEve = (M.md==7)||(M.md==14)||(M.md==21)||(M.md==(M.mml-1));
+
+        var holidayName = "";
+        
+        if (M.mm === 2 && M.ms === 1) holidayName = "သ္ဘၚ်ဗလိုပ်ဇြဲ၊ တ္ၚဲဗုဒ္ဓ";
+        else if (M.mm === 2 && M.ms === 2 && M.d === 8) holidayName = "တ္ၚဲဍုၚ်ဟံသာဝတဳလီု";
+        else if (M.mm === 3 && M.ms === 1) holidayName = "တ္ၚဲမဟာသမယ";
+        else if (M.mm === 4 && M.ms === 0 && M.d === 5) holidayName = "တ္ၚဲဂကူမန်ဆဵုကျာ်ကၠာအိုတ်";
+        else if (M.mm === 4 && M.ms === 1) holidayName = "တ္ၚဲဓမ္မစက်";
+        else if (M.mm === 5 && M.ms === 1) holidayName = "တ္ၚဲပၠန်ဂတးမန်၊ သ္ဘၚ်နုၚ်နိဓိ";
+        else if (M.mm === 6 && M.ms === 1) holidayName = "တ္ၚဲဂရုဓရ်၊ ဗဝ်သၟုတ်က္ၜင်";
+        else if (M.mm === 7 && M.ms === 1) holidayName = "တ္ၚဲအဘိဓရ်၊ သှ်ပဝါရဏာ";
+        else if (M.mm === 8 && M.ms === 1) holidayName = "သ္ဘၚ်ပူဇဴပၟတ်ပၞာၚ်";
+        else if (M.mm === 10 && M.ms === 0 && M.d === 1) holidayName = "တ္ၚဲကရေၚ်လှာဲသၞာံ";
+        else if (M.mm === 10 && M.ms === 2 && M.d === 8) holidayName = "တ္ၚဲကဵုဒါန်ဆီဂကူမန်";
+        else if (M.mm === 11 && M.ms === 0 && M.d === 3) holidayName = "တ္ၚဲအ္စာကဝိမန်";
+        else if (M.mm === 11 && M.ms === 2 && M.d === 1) holidayName = "တ္ၚဲကောန်ဂကူမန်";
+        else if (M.mm === 12 && M.ms === 0 && M.d === 12) holidayName = "တ္ၚဲညးဗြဴမန်";
+        else if (M.mm === 12 && M.ms === 1) holidayName = "သဘၚ်ကျာ်လ္ဂုၚ်";
+        else if (M.mm === 12 && M.ms === 2 && M.d === 10) holidayName = "တ္ၚဲကောန်ဂကူဗၟာ";
+
+        if (!holidayName) {
+            if (gm === 1 && gd === 4) holidayName = "တ္ၚဲဂွံဗၠးၜးနူအၚ်္ဂလိက်";
+            else if (gm === 2 && gd === 12) holidayName = "တ္ၚဲကၟိန်ဍုၚ်";
+            else if (gm === 3 && gd === 2) holidayName = "တ္ၚဲသၟာဗ္ၚ";
+            else if (gm === 3 && gd === 27) holidayName = "တ္ၚဲၝောံဒပ်ပၞာန်ဗၟာ";
+            else if (gm === 4 && gd === 13) holidayName = "တ္ၚဲဒစးအတး";
+            else if (gm === 4 && gd === 14) holidayName = "တ္ၚဲအတးစှ်ေ";
+            else if (gm === 4 && gd === 15) holidayName = "တ္ၚဲအတးကြာပ်သၞာံ";
+            else if (gm === 4 && gd === 16) holidayName = "တ္ၚဲအတးတိုန်";
+            else if (gm === 4 && gd === 17) holidayName = "တ္ၚဲမ္ၚဵုသၞာံတၟိ";
+            else if (gm === 5 && gd === 1) holidayName = "တ္ၚဲသၟာကမၠောန်";
+            else if (gm === 7 && gd === 19) holidayName = "တ္ၚဲအာဇာနဲဗၟာ";
+            else if (gm === 12 && gd === 25) holidayName = "တ္ၚဲခရေဿမာတ်";
+            else if (gm === 12 && gd === 28) holidayName = "တ္ၚဲသၟတ်မန်";
+        }
+
+        var sabbathText = "";
+        if (holidayName !== "") {
+            sabbathText = holidayName;
+        } else {
+            sabbathText = grX['Dawn'] + " - " + dawnTime;
+            if (isSabbath) sabbathText += " ၊ " + grX['Sabbath'];
+            else if (isSabbathEve) sabbathText += " ၊ " + grX['Sabbath Eve'];
+            else sabbathText += " " + grX['Hour'];
+        }
+
+        var isVassaSabbathHoliday = (isVassa && isSabbath);
+        var isHoliday = (holidayName !== "");
+        var sabbathStyle = (isVassaSabbathHoliday || isHoliday) ? "color: #cc0000;" : "";
+
+        var tideBg = "#fee7c4"; 
+        if (M.d >= 4 && M.d <= 10) {
+            tideBg = "#d3e5d4"; 
+        } else if (M.d === 3) {
+            tideBg = "#ffafaf"; 
+        }
+        var tideStyle = "background-color: " + tideBg + ";";
+
+        var tide = rGetTideTimeStr(M.d);
+        var tideText = grX['High Tide'] + "-" + tide.ht + " ၊ " + grX['Low Tide'] + "-" + tide.lt;
+
+        return {
+            myearLabel: myearLabel,
+            myearVal: myearVal,
+            syear: syear,
+            monthName: monthName,
+            moonDay: moonDay,
+            moonStatus: moonStatus,
+            dayText: dayText,
+            dayStyle: dayStyle,
+            sabbathText: sabbathText,
+            sabbathStyle: sabbathStyle,
+            tideText: tideText,
+            tideStyle: tideStyle
+        };
+    }
+
+    function rg2j(gy,gm,gd) {
+        var a,y,m;
+        a=Math.floor((14-gm)/12);
+        y=gy+4800-a;
+        m=gm+(12*a)-3;
+        return (gd+Math.floor((153*m+2)/5)+(365*y)+Math.floor(y/4)
+                -Math.floor(y/100)+Math.floor(y/400)-32045);
+    }
+
+    function rj2m(jd) {
+        var SY=1577917828/4320000;
+        var MO=1954168.050623;
+        var jdn,my,yo,dd,myl,mmt,t,s,c,mm,md,mml,ms,d,wd;
+        
+        jdn=Math.round(jd);
+        my=Math.floor((jdn-0.5-MO)/SY);
+        yo=rChkMy(my);
+        dd=jdn-yo.tg1+1;
+        myl=354+yo.watat*30+yo.bw;
+        mmt=Math.floor((dd-1)/myl);
+        dd-=mmt*myl; t=Math.floor(myl/(dd+266));
+        s=29.5+t*yo.bw/5; c=117+t*yo.bw*14/5;
+        dd+=t*266-(1-t)*(myl-266);
+        mm=Math.floor((dd+c)/s);
+        md=dd-Math.floor(s*mm-c-0.1);
+        mm=(mm%16); mm-=12*Math.floor(mm/13);
+        mml=30-mm%2; if(mm==3) mml+=yo.bw;
+        ms=Math.floor((md+1)/16)+Math.floor(md/16)+Math.floor(md/mml);
+        d=md-15*Math.floor(md/16);
+        wd=(jdn+2)%7;
+        return {my:my,myt:yo.myt,watat:yo.watat,bw:yo.bw,myl:myl,mm:mm,mmt:mmt,
+            mml:mml,md:md,ms:ms,d:d,wd:wd};
+    }
+
+    function rChkMy(my) {
+        var yd=0,y1,y2,myt,bw=0,watat,nd,tg1;
+        y2=rChkWatat(my);
+        do{ yd++; y1=rChkWatat(my-yd); }while(y1.watat==0);
+        watat=y2.watat; myt=watat;  
+        if(watat) { nd=(y2.fm-y1.fm)%354; bw=Math.floor(nd/31); myt=bw+1;}
+        tg1=y1.fm+354*yd-102;
+        return {myt:myt,watat:watat,bw:bw,tg1:tg1};
+    }
+
+    function rChkWatat(my) {
+        var SY=1577917828/4320000;
+        var LM=1577917828/53433336;
+        var MO=1954168.050623;
+        var ed,NM,TA,TW,watat=0,w2fm,yr,WO=0;
+        ed=(SY*(my+3739))%LM;
+        NM=8;
+        TA=(SY/12-LM)*(12-NM);
+        if(ed<TA) ed+=LM;
+        TW=LM-(SY/12-LM)*NM; 
+        if(ed>=TW) watat=1;
+        WO-=4/NM;
+        if (my==1377) WO+=1; if (my==1344) watat=1; else if (my==1345) watat=0; 
+        w2fm=Math.round(SY*my+MO-ed+4.5*LM+WO);
+        return {watat:watat,fm:w2fm};
+    }
+
+    function rn2s(n) {
+        var r,s=""; n=Math.floor(n);
+        do{
+            r=n%10; n=Math.floor(n/10);
+            s=grX[r.toString()]+s;
+        }while(n>0);
+        return s;
+    }
+
+    function rSetLang(lang) {   
+        if (lang==1) {
+            return {'First Waso':'First Waso','Tagu':'Tagu','Kason':'Kason',
+            'Nayon':'Nayon','Waso':'Waso', 'Wagaung':'Wagaung','Tawthalin':'Tawthalin',
+            'Thadingyut':'Thadingyut','Tazaungmon':'Tazaungmon','Nadaw':'Nadaw',
+            'Pyatho':'Pyatho','Tabodwe':'Tabodwe','Tabaung':'Tabaung',
+            'waxing':'waxing','waning':'waning','full moon':'full moon',
+            'new moon':'new moon','Sasana Year':'Sasana Year',
+            'Myanmar Year':'Myanmar Year','Ku':' ','Tho':'','Late':'Late ','Second':'Second ',
+            'Sunday':'Sunday','Monday':'Monday','Tuesday':'Tuesday',
+            'Wednesday':'Wednesday','Thursday':'Thursday','Friday':'Friday',
+            'Saturday':'Saturday','Nay':' ','Yat':' ','Sabbath Eve':'Sb Eve',
+            'Sabbath':'Sabbath','Pyathada':'Pyathada','Yatyaza':'Yatyaza',
+            'Dawn':'Dawn','Hour':'hr','High Tide':'High Tide','Low Tide':'Low Tide',
+            '0': '0','1': '1','2': '2','3': '3','4': '4','5': '5',
+            '6': '6','7': '7','8': '8','9': '9',',':',','.':'.'};
+        } else {
+            return {'Second Waso': 'ဂိတုဒု-ဒ္ဂိုန်','First Waso':'ဂိတုပ-ဒ္ဂိုန်','Tagu':'ဂိတုစဲ','Kason':'ဂိတုပသာ်','Nayon':'ဂိတုဇှ်ေ',
+            'Waso':'ဂိတုဒ္ဂိုန်','Wagaung':'ဂိတုခ္ဍဲသဳ','Tawthalin':'ဂိတုဘတ်','Thadingyut':'ဂိတုဝှ်',
+            'Tazaungmon':'ဂိတုက္ထိုန်','Nadaw':'ဂိတုမြေက္ကသဵု','Pyatho':'ဂိတုပုဟ်','Tabodwe':'ဂိတုမာ်',
+            'Tabaung':'ဂိတုဖဝ်ရဂိုန်','waxing':'မံက်','waning':'စွေက်','full moon':'ပေၚ်',
+            'new moon':'အိုတ်','Sasana Year':'သာသနာ','Myanmar Year':'သက္ကရာဇ်ဍုၚ်',
+            'Ku':'','Tho':'သၞာံ','Late':'','Second':'','Sunday':'တ္ၚဲအဒိုတ်','Monday':'တ္ၚဲစန်',
+            'Tuesday':'တ္ၚဲအၚာ','Wednesday':'တ္ၚဲဗုဒ္ဓဝါ','Thursday':'တ္ၚဲဗြဴဗတိ','Friday':'တ္ၚဲသိုက်',
+            'Saturday':'တ္ၚဲသ္ၚိသဝ်','Nay':'','Yat':'','Sabbath Eve':'တ္ၚဲတိၚ်','Sabbath':'တ္ၚဲသဳ',
+            'Pyathada':'တ္ၚဲပြာဗ္ဗဒါ','Yatyaza':'တ္ၚဲရာဇာ',
+            'Dawn':'အရှိုဏ်စာ်','Hour':'နာဍဳ','High Tide':'ဍာ်တိုန်','Low Tide':'စှ်ေ',
+            '0': '၀','1': '၁','2': '၂','3': '၃','4': '၄','5': '၅','6': '၆','7': '၇',
+            '8': '၈','9': '၉',',':'','.':''};
+        }
+    }
+    </script>
+</body>
+</html>
