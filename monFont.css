@@ -1,4 +1,23 @@
 @font-face {
+    font-family: 'ပရၚ်တဲတၟေၚ် နူ(အမ်မြာဲဆာန်)';
+      src: url('https://monitvilla.github.io/fonts/OmarRayChamPresent.woff') format('woff'),
+			url('https://monitvilla.github.io/fonts/OmarRayChamPresent.woff2') format('woff2'),
+			url('https://monitvilla.github.io/fonts/OmarRayChamPresent.ttf') format('truetype');
+    font-weight: normal; font-style: normal;
+}
+
+@font-face {
+    font-family: '02Mon(Omar Ray Cham)office';
+      src: url('https://monitvilla.github.io/fonts/OmarRayCham02.woff') format('woff'),
+			url('https://monitvilla.github.io/fonts/OmarRayCham02.woff2') format('woff2'),
+			url('https://monitvilla.github.io/fonts/OmarRayCham02.ttf') format('truetype');
+    font-weight: normal; font-style: normal;
+}
+
+@font-face {
     font-family: '26Mon(Omar Ray Cham)office';
-    src: url('OmarRayCham26.ttf') format('ttf');
+      src: url('https://monitvilla.github.io/fonts/OmarRayCham26.woff') format('woff'),
+			url('https://monitvilla.github.io/fonts/OmarRayCham26.woff2') format('woff2'),
+			url('https://monitvilla.github.io/fonts/OmarRayCham26.ttf') format('truetype');
+    font-weight: normal; font-style: normal;
 }
