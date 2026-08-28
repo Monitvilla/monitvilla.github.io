@@ -1,0 +1,213 @@
+@font-face {
+	font-family:'02Mon(Omar Ray Cham)office'; 
+	src:local('02Mon(Omar Ray Cham)office'),url('omarRayCham02.ttf');
+	}
+@font-face {
+	font-family:'Phonetic';
+	src:local('Phonetic'),url('ipa.ttf');
+}
+
+:root {
+  --primary: #b91c1c;        
+  --primary-hover: #991b1b;
+  --bg-color: #f8fafc;        
+  --card-bg: #ffffff;
+  --text-main: #1e293b;       
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --highlight-bg: #fef08a;   
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --font-mon: '02Mon(Omar Ray Cham)office', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: var(--font-mon) !important;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+#topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, #b91c1c, #800000);
+  color: #ffffff;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 16px 12px;
+  box-shadow: var(--shadow-sm);
+  letter-spacing: 0.5px;
+}
+
+#q {
+  display: block;
+  width: calc(100% - 24px);
+  max-width: 600px;
+  margin: 12px auto;
+  height: 46px;
+  padding: 0 16px 0 42px;
+  font-family: var(--font-mon) !important;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  background: #ffffff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%2364748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>') no-repeat 14px center;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease-in-out;
+}
+
+#q:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15);
+}
+
+#result {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 8px 16px 40px 16px;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  text-align: left;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  position: relative;
+  z-index: 2;
+}
+
+#result::-webkit-scrollbar {
+  width: 5px;
+}
+#result::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+#result::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.word {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-top: 12px;
+}
+
+.phonetic {
+  font-family: 'Phonetic', sans-serif !important;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background: #f1f5f9;
+  padding: 2px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.clickable {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0 3px;
+  margin: 0 -1px;
+  transition: all 0.15s ease;
+}
+
+.clickable:hover {
+  color: #b91c1c;
+  background-color: rgba(185, 28, 28, 0.08); 
+}
+
+.highlight {
+  background-color: var(--highlight-bg);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--border-color);
+  margin: 16px 0;
+}
+
+.logo-container {
+  position: fixed;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.08;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.logo-container img {
+  max-width: 220px;
+  height: auto;
+}
+
+.def-num {
+    display: inline-block;
+    font-weight: 550;
+    color: #b91c1c;
+    margin-top: 4px;
+}
+
+.pos-tag {
+    color: #1e293b;
+    font-style: italic;
+    margin-top: 8px;
+    display: inline-block;
+}
+
+.sub-word {
+    color: #b91c1c;
+    font-weight: 550;
+    display: inline-block;
+    margin-top: 6px;
+}
+
+.mon-sub {
+    color: #0f172a;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+.meta-tag {
+    color: #0284c7; 
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 6px;
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 18px;
+  }
+  #topbar {
+    font-size: 1.25rem;
+  }
+}
