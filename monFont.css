@@ -21,3 +21,26 @@
 			url('https://monitvilla.github.io/fonts/OmarRayCham26.ttf') format('truetype');
     font-weight: normal; font-style: normal;
 }
+@font-face {
+    font-family: 'စေတန အမ်မြာဲဆာန်';
+      src: url('https://monitvilla.github.io/fonts/cetanaOmarRayCham.woff') format('woff'),
+			url('https://monitvilla.github.io/fonts/cetanaOmarRayCham.woff2') format('woff2'),
+			url('https://monitvilla.github.io/fonts/cetanaOmarRayCham.ttf') format('truetype');
+    font-weight: normal; font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mon_LeonardoVinci';
+      src: url('https://monitvilla.github.io/fonts/mon_LeonardoVinci.woff') format('woff'),
+			url('https://monitvilla.github.io/fonts/mon_LeonardoVinci.woff2') format('woff2'),
+			url('https://monitvilla.github.io/fonts/mon_LeonardoVinci.ttf') format('truetype');
+    font-weight: normal; font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mon Omar Ray Cham';
+      src: url('https://monitvilla.github.io/fonts/monOmarRayCham.woff') format('woff'),
+			url('https://monitvilla.github.io/fonts/monOmarRayCham.woff2') format('woff2'),
+			url('https://monitvilla.github.io/fonts/monOmarRayCham.ttf') format('truetype');
+    font-weight: normal; font-style: normal;
+}
